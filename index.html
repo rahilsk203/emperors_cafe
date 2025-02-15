@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emperor's Cafe - Grand Opening</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        .golden-text {
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hover-3d {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 2rem;
+        }
+        .gallery-image {
+            opacity: 0;
+            transform: translateY(50px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        #particles > div {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: radial-gradient(circle, #FFD700 20%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-50px) translateX(-50px); }
+            75% { transform: translateY(-150px) translateX(25px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-black to-gray-900 min-h-screen">
+
+    <!-- Golden Particle Animation -->
+    <div id="particles" class="fixed inset-0 z-0"></div>
+
+    <!-- Boot Screen -->
+    <div class="fixed inset-0 bg-black z-50 flex items-center justify-center" id="bootScreen">
+        <div class="text-center">
+            <p class="golden-text text-4xl mb-4 animate-pulse">Loading Royal Experience...</p>
+            <div class="text-white">
+                <p class="text-xl">Special Guests:</p>
+                <p class="text-2xl golden-text mt-2">MR. T. Mondal • MRS. F. Mondal</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 container mx-auto px-4 py-16 text-center hidden" id="mainContent">
+        <!-- Header -->
+        <div class="mb-16 hover-3d">
+            <h1 class="golden-text text-6xl md:text-8xl font-bold mb-4">
+                EMPEROR'S CAFE
+            </h1>
+            <h2 class="text-3xl text-white font-light">
+                Grand Opening - 15 February 2025
+            </h2>
+        </div>
+
+        <!-- Event Card -->
+        <div class="max-w-2xl mx-auto bg-black/50 backdrop-blur-lg rounded-2xl p-8 mb-16 hover-3d border border-gold-500/30">
+            <div class="golden-text text-4xl font-bold mb-6">
+                🎉 GRAND CELEBRATION 🎉
+            </div>
+            
+            <div class="space-y-4 text-white/80">
+                <!-- Special Guests Section -->
+                <div class="text-xl golden-text font-medium">
+                    🎩 Special Guests:
+                    <div class="text-white text-lg mt-2">
+                        <p>• MR. T. Mondal</p>
+                        <p>• MRS. F. Mondal</p>
+                    </div>
+                </div>
+
+                <div class="text-2xl golden-text font-medium">
+                    ⏰ 6:00 PM Onwards
+                </div>
+                <div class="text-xl">
+                    📍 14, Syed Amir Ali Ave, Kolkata
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <button onclick="showGallery()" 
+                    class="mt-8 px-12 py-3 bg-amber-600 hover:bg-amber-700 rounded-full text-lg font-semibold golden-text transition-all duration-300 hover:scale-105">
+                Unveil the Experience ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Image Gallery -->
+    <div id="galleryOverlay" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto">
+        <div class="container mx-auto py-20 px-4">
+            <button onclick="hideGallery()" 
+                    class="fixed top-5 right-5 text-3xl golden-text hover:scale-125 transition-transform">
+                ✕
+            </button>
+            
+            <div class="image-gallery">
+                <img src="images/cafe1.jpg" class="gallery-image" alt="Cafe Interior">
+                <img src="images/cafe2.jpg" class="gallery-image" alt="Coffee Art">
+                <img src="images/cafe3.jpg" class="gallery-image" alt="Dessert Menu">
+                <img src="images/cafe4.jpg" class="gallery-image" alt="Evening Ambience">
+                <img src="images/cafe5.jpg" class="gallery-image" alt="Specialty Drinks">
+                <img src="images/cafe6.jpg" class="gallery-image" alt="Outdoor Seating">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for(let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation-delay: ${Math.random() * 15}s;
+                `;
+                container.appendChild(particle);
+            }
+        }
+
+        // Boot screen animation
+        gsap.to("#bootScreen", {
+            opacity: 0,
+            duration: 1,
+            delay: 3,
+            onComplete: () => {
+                document.getElementById('bootScreen').remove();
+                document.getElementById('mainContent').classList.remove('hidden');
+                gsap.from("#mainContent", {
+                    duration: 1.5,
+                    opacity: 0,
+                    y: 50,
+                    ease: "power4.out"
+                });
+            }
+        });
+
+        // Gallery functions
+        function showGallery() {
+            const overlay = document.getElementById('galleryOverlay');
+            overlay.classList.remove('hidden');
+            
+            gsap.to(overlay, {duration: 0.5, opacity: 1});
+            
+            gsap.from(".gallery-image", {
+                duration: 1,
+                opacity: 0,
+                y: 100,
+                stagger: 0.15,
+                ease: "back.out(1.2)",
+                delay: 0.3
+            });
+        }
+
+        function hideGallery() {
+            gsap.to("#galleryOverlay", {
+                duration: 0.5,
+                opacity: 0,
+                onComplete: () => {
+                    document.getElementById('galleryOverlay').classList.add('hidden');
+                    gsap.set(".gallery-image", {opacity: 0, y: 50});
+                }
+            });
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+        });
+    </script>
+</body>
+  </html>
